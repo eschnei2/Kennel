@@ -1,10 +1,17 @@
 import React from "react"
 import { Route } from "react-router-dom"
 import { Home } from "./Home"
-import { AnimalCard } from "./animal/AnimalCard"
-import { CustomerCard} from "./customer/CustomerCard"
-import { EmployeeCard } from "./employee/EmployeeCard"
 import { LocationCard } from "./Locations/LocationCard"
+import { AnimalProvider } from "./animal/AnimalProvider"
+import { AnimalList } from "./animal/AnimalList"
+import { CustomerProvider } from "./customer/CustomerProvider.js"
+import { CustomerList } from "./customer/CustomerList.js"
+import { EmployeeList } from "./employee/EmployeeList"
+import { EmployeeProvider } from "./employee/EmployeeProvider"
+import { LocationList } from "./Locations/LocationList"
+import { LocationProvider } from "./Locations/LocationProvider"
+import { AnimalForm } from "./animal/AnimalForm"
+import { AnimalDetail } from "./animal/AnimalDetail"
 
 export const ApplicationViews = () => {
     return (
@@ -15,21 +22,45 @@ export const ApplicationViews = () => {
             </Route>
 
             {/* Render the animal list when http://localhost:3000/animals */}
-            <Route path="/animals">
-                <AnimalCard />
-            </Route>
+            <AnimalProvider>
+                <Route exact path="/animals">
+                    <AnimalList />
+                </Route>
 
-            <Route path="/customers">
-                <CustomerCard />
-            </Route>
+            <CustomerProvider>
+                <LocationProvider>
+                    <Route exact path="/animals/create">
+                        <AnimalForm />
+                    </Route>
+                </LocationProvider>
+            </CustomerProvider>
 
-            <Route path="/employees">
-                <EmployeeCard />
-            </Route>
+                <Route exact path="/animals/detail/:animalId(\d+)">
+		            <AnimalDetail />
+	            </Route>
 
-            <Route path="/locations">
-                <LocationCard />
-            </Route>
+                <Route path="/animals/edit/:animalId(\d+)">
+                    <AnimalForm />
+                </Route>        
+            </AnimalProvider>
+
+            <CustomerProvider>
+                <Route exact path="/customers">
+                    <CustomerList />
+                </Route>
+            </CustomerProvider>
+
+            <EmployeeProvider>
+                <Route exact path="/employees">
+                    <EmployeeList />
+                </Route>
+            </EmployeeProvider>
+
+            <LocationProvider>
+                <Route exact path="/locations">
+                    <LocationList />
+                </Route>
+            </LocationProvider>
         </>
     )
 }
