@@ -10,6 +10,11 @@ export const AnimalForm = () => {
     const { locations, getLocations } = useContext(LocationContext)
     const { customers, getCustomers } = useContext(CustomerContext)
 
+  // With React, we do not target the DOM with `document.querySelector()`. Instead, our return (render) reacts to state or props.
+
+  // Define the initial state of the form inputs with useState()
+
+
     //for edit, hold on to state of animal in this view
     const [animal, setAnimal] = useState({})
     //wait for data before button is active
@@ -32,28 +37,30 @@ export const AnimalForm = () => {
     }
 
     const handleSaveAnimal = () => {
-      if (parseInt(animal.locationId) === 0) {
-          window.alert("Please select a location")
+      if (parseInt(animal.locationId) === 0 || parseInt(animal.customerId) === 0) {
+          window.alert("Please select a location or a customer.")
       } else {
         //disable the button - no extra clicks
         setIsLoading(true);
-        if (animalId){
+        if (animalId) {
           //PUT - update
           updateAnimal({
               id: animal.id,
               name: animal.name,
+              breed: animal.breed,
               locationId: parseInt(animal.locationId),
               customerId: parseInt(animal.customerId)
           })
-          .then(() => history.push(`/animals/detail/${animal.id}`))
-        }else {
+          .then(() => history.push(`/animal/detail/${animal.id}`))
+        } else {
           //POST - add
           addAnimal({
               name: animal.name,
+              breed: animal.breed,
               locationId: parseInt(animal.locationId),
               customerId: parseInt(animal.customerId)
           })
-          .then(() => history.push("/animals"))
+          .then(() => history.push("/animal"))
         }
       }
     }
@@ -73,15 +80,12 @@ export const AnimalForm = () => {
       })
     }, [])
 
-    //since state controlls this component, we no longer need
-    //useRef(null) or ref
-
     return (
       <form className="animalForm">
         <h2 className="animalForm__title">New Animal</h2>
         <fieldset>
-          <div className="form-group">
-            <label htmlFor="animalName">Animal name: </label>
+          <div className="form-group-animal">
+            <label className="animal_label" htmlFor="animalName">Animal name: </label>
             <input type="text" id="animalName" name="name" required autoFocus className="form-control"
             placeholder="Animal name"
             onChange={handleControlledInputChange}
@@ -89,26 +93,35 @@ export const AnimalForm = () => {
           </div>
         </fieldset>
         <fieldset>
-          <div className="form-group">
-            <label htmlFor="location">Assign to location: </label>
+          <div className="form-group-animal">
+            <label className="animal_label" htmlFor="animalBreed">Animal breed:</label>
+            <input type="text" id="animalBreed" name="breed" required autoFocus className="form-control" 
+            placeholder="Animal breed" 
+            onChange={handleControlledInputChange}
+            defaultValue={animal.breed}/>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div className="form-group-animal">
+            <label className="animalLabel" htmlFor="location">Assign to location: </label>
             <select value={animal.locationId} name="locationId" id="animalLocation" className="form-control" onChange={handleControlledInputChange}>
               <option value="0">Select a location</option>
-              {locations.map(l => (
-                <option key={l.id} value={l.id}>
-                  {l.name}
+              {locations.map(location => (
+                <option key={location.id} value={location.id}>
+                  {location.name}
                 </option>
               ))}
             </select>
           </div>
         </fieldset>
         <fieldset>
-          <div className="form-group">
-            <label htmlFor="customer">Customer: </label>
+          <div className="form-group-animal">
+            <label className="animal_label" htmlFor="customer">Customer: </label>
             <select value={animal.customerId} name="customerId" id="customerAnimal" className="form-control" onChange={handleControlledInputChange}>
               <option value="0">Select a customer</option>
-              {customers.map(c => (
-                <option key={c.id} value={c.id}>
-                    {c.name}
+              {customers.map(customer => (
+                <option key={customer.id} value={customer.id}>
+                    {customer.name}
                 </option>
               ))}
             </select>
@@ -120,7 +133,8 @@ export const AnimalForm = () => {
             event.preventDefault() // Prevent browser from submitting the form and refreshing the page
             handleSaveAnimal()
           }}>
-        {animalId ? <>Save Animal</> : <>Add Animal</>}</button>
+        {/* Ternary: is there an animalId in the URL? If so, display the Save Animal button, else display the Add Animal button */}
+        {animalId ? <div>Save Animal</div> : <div>Add Animal</div> }</button>
       </form>
     )
-}
+};

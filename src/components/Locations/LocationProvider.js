@@ -24,6 +24,11 @@ export const LocationProvider = (props) => {
         .then(getLocations)
     }
 
+    const getLocationsById = (id) => {
+        return fetch(`http://localhost:8088/locations/${id}?_embed=location&_embed=customer`)
+        .then(res => res.json()) // note we don't set anything on state here. Why?
+    }
+
     /*
         You return a context provider which has the
         `animals` state, `getAnimals` function,
@@ -32,7 +37,7 @@ export const LocationProvider = (props) => {
     */
     return (
         <LocationContext.Provider value={{
-            locations, getLocations, addLocation
+            locations, getLocations, addLocation, getLocationsById
         }}>
             {props.children}
         </LocationContext.Provider>
