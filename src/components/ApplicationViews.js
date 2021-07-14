@@ -1,7 +1,6 @@
 import React from "react"
 import { Route } from "react-router-dom"
 import { Home } from "./Home"
-import { LocationCard } from "./Locations/LocationCard"
 import { AnimalProvider } from "./animal/AnimalProvider"
 import { AnimalList } from "./animal/AnimalList"
 import { CustomerProvider } from "./customer/CustomerProvider.js"
@@ -12,6 +11,8 @@ import { LocationList } from "./Locations/LocationList"
 import { LocationProvider } from "./Locations/LocationProvider"
 import { AnimalForm } from "./animal/AnimalForm"
 import { AnimalDetail } from "./animal/AnimalDetail"
+import { EmployeeForm } from "./employee/EmployeeForm"
+import { EmployeeDetail } from "./employee/EmployeeDetail"
 
 export const ApplicationViews = () => {
     return (
@@ -58,6 +59,20 @@ export const ApplicationViews = () => {
                 <Route exact path="/employees">
                     <EmployeeList />
                 </Route>
+                <LocationProvider>
+                    <CustomerProvider>
+                        <Route path="/employees/create">
+                            <EmployeeForm />
+                        </Route>
+                        <Route path="/employees/detail/:employeeId(\d+)">
+                            <EmployeeDetail />
+                        </Route>
+                        <Route path="/employees/edit/:employeeId(\d+)">
+                            <EmployeeForm />
+                        </Route>
+                    </CustomerProvider>
+                </LocationProvider>
+                
             </EmployeeProvider>
 
             <LocationProvider>
